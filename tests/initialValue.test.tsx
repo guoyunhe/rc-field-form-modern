@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react';
-import { resetWarned } from 'rc-util/lib/warning';
+import { resetWarned } from 'rc-util-modern/dist/warning';
 import React, { useState } from 'react';
 import Form, { Field, List, useForm, type FormInstance } from '../src';
 import { changeValue, getInput } from './common';
@@ -12,7 +12,7 @@ describe('Form.InitialValues', () => {
     const { container } = render(
       <div>
         <Form
-          ref={instance => {
+          ref={(instance) => {
             form = instance;
           }}
           initialValues={{ username: 'Light', path1: { path2: 'Bamboo' } }}
@@ -24,7 +24,7 @@ describe('Form.InitialValues', () => {
             <Input data-name="path1.path2" />
           </Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(form.getFieldsValue()).toEqual({
@@ -55,7 +55,7 @@ describe('Form.InitialValues', () => {
     let form: FormInstance;
     let mountCount = 0;
 
-    const TestInput = props => {
+    const TestInput = (props) => {
       React.useEffect(() => {
         mountCount += 1;
       }, []);
@@ -65,7 +65,7 @@ describe('Form.InitialValues', () => {
 
     const Test = ({ initialValues }) => (
       <Form
-        ref={instance => {
+        ref={(instance) => {
           form = instance;
         }}
         initialValues={initialValues}
@@ -121,7 +121,7 @@ describe('Form.InitialValues', () => {
 
       return (
         <>
-          <button onClick={() => setShow(prev => !prev)}>switch show</button>
+          <button onClick={() => setShow((prev) => !prev)}>switch show</button>
           {show && (
             <Form form={form} initialValues={formValue} preserve={false}>
               <Field shouldUpdate>
@@ -132,7 +132,7 @@ describe('Form.InitialValues', () => {
                 )}
               </Field>
               <List name="users">
-                {fields => (
+                {(fields) => (
                   <>
                     {fields.map(({ key, name, ...restField }) => (
                       <React.Fragment key={key}>
@@ -185,13 +185,13 @@ describe('Form.InitialValues', () => {
           <Field name="conflict" initialValue="light">
             <Input />
           </Field>
-        </Form>,
+        </Form>
       );
 
       expect(getInput(container).value).toEqual('bamboo');
 
       expect(errorSpy).toHaveBeenCalledWith(
-        "Warning: Form already set 'initialValues' with path 'conflict'. Field can not overwrite it.",
+        "Warning: Form already set 'initialValues' with path 'conflict'. Field can not overwrite it."
       );
 
       errorSpy.mockRestore();
@@ -208,11 +208,11 @@ describe('Form.InitialValues', () => {
           <Field name="conflict" initialValue="light">
             <Input />
           </Field>
-        </Form>,
+        </Form>
       );
 
       expect(errorSpy).toHaveBeenCalledWith(
-        "Warning: Multiple Field with path 'conflict' set 'initialValue'. Can not decide which one to pick.",
+        "Warning: Multiple Field with path 'conflict' set 'initialValue'. Can not decide which one to pick."
       );
 
       errorSpy.mockRestore();
@@ -366,7 +366,7 @@ describe('Form.InitialValues', () => {
         return (
           <Form form={form}>
             <Field name="light" initialValue="bamboo">
-              {control => {
+              {(control) => {
                 expect(control.value).toEqual('bamboo');
                 return null;
               }}
@@ -394,7 +394,7 @@ describe('Form.InitialValues', () => {
                   add();
                 }}
               />
-              {fields.map(field => (
+              {fields.map((field) => (
                 <Field {...field} initialValue="bamboo" key={field.key}>
                   <Input />
                 </Field>
@@ -402,7 +402,7 @@ describe('Form.InitialValues', () => {
             </>
           )}
         </Form.List>
-      </Form>,
+      </Form>
     );
 
     fireEvent.click(container.querySelector('button'));

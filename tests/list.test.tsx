@@ -1,14 +1,14 @@
+import { fireEvent, render } from '@testing-library/react';
+import { resetWarned } from 'rc-util-modern/dist/warning';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { fireEvent, render } from '@testing-library/react';
-import { resetWarned } from 'rc-util/lib/warning';
-import Form, { Field, List } from '../src';
 import type { FormProps } from '../src';
+import Form, { Field, List } from '../src';
 import type { ListField, ListOperations, ListProps } from '../src/List';
-import type { FormInstance, Meta } from '../src/interface';
 import ListContext from '../src/ListContext';
-import { Input } from './common/InfoField';
+import type { FormInstance, Meta } from '../src/interface';
 import { changeValue, getInput } from './common';
+import { Input } from './common/InfoField';
 import timeout from './common/timeout';
 
 describe('Form.List', () => {
@@ -17,7 +17,7 @@ describe('Form.List', () => {
   const generateForm = (
     renderList?: (fields: ListField[], operations: ListOperations, meta: Meta) => React.ReactNode,
     formProps?: FormProps,
-    listProps?: Partial<ListProps>,
+    listProps?: Partial<ListProps>
   ): readonly [container: HTMLElement] => {
     const { container } = render(
       <div>
@@ -28,16 +28,16 @@ describe('Form.List', () => {
             </List>
           </div>
         </Form>
-      </div>,
+      </div>
     );
     return [container] as const;
   };
 
   it('basic', async () => {
     const [container] = generateForm(
-      fields => (
+      (fields) => (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input data-key={field.key} />
             </Field>
@@ -48,7 +48,7 @@ describe('Form.List', () => {
         initialValues: {
           list: ['', '', ''],
         },
-      },
+      }
     );
 
     function matchKey(index: number, key: React.Key) {
@@ -71,7 +71,7 @@ describe('Form.List', () => {
     render(
       <Form initialValues={{ list: null }}>
         <Form.List name="list">{() => null}</Form.List>
-      </Form>,
+      </Form>
     );
 
     // Not a array
@@ -80,7 +80,7 @@ describe('Form.List', () => {
     render(
       <Form initialValues={{ list: {} }}>
         <Form.List name="list">{() => null}</Form.List>
-      </Form>,
+      </Form>
     );
     expect(errorSpy).toHaveBeenCalledWith("Warning: Current value of 'list' is not an array type.");
     errorSpy.mockRestore();
@@ -92,7 +92,7 @@ describe('Form.List', () => {
       operation = opt;
       return (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input data-key={field.key} />
             </Field>
@@ -225,7 +225,7 @@ describe('Form.List', () => {
       operation = opt;
       return (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input data-key={field.key} />
             </Field>
@@ -297,7 +297,7 @@ describe('Form.List', () => {
       operation = opt;
       return (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input />
             </Field>
@@ -318,7 +318,7 @@ describe('Form.List', () => {
     });
 
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: The second parameter of the add function should be a valid positive number.',
+      'Warning: The second parameter of the add function should be a valid positive number.'
     );
     errorSpy.mockRestore();
 
@@ -343,9 +343,9 @@ describe('Form.List', () => {
   describe('validate', () => {
     it('basic', async () => {
       const [container] = generateForm(
-        fields => (
+        (fields) => (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key} rules={[{ required: true }]}>
                 <Input />
               </Field>
@@ -354,7 +354,7 @@ describe('Form.List', () => {
         ),
         {
           initialValues: { list: [''] },
-        },
+        }
       );
 
       await changeValue(getInput(container), ['bamboo', '']);
@@ -366,7 +366,7 @@ describe('Form.List', () => {
       const [container] = generateForm(
         (fields, { remove }) => (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key} rules={[{ required: true }]}>
                 <Input />
               </Field>
@@ -382,7 +382,7 @@ describe('Form.List', () => {
         ),
         {
           initialValues: { list: ['', ''] },
-        },
+        }
       );
 
       expect(container.querySelectorAll('input')).toHaveLength(2);
@@ -399,7 +399,7 @@ describe('Form.List', () => {
       const [container] = generateForm(
         (fields, { remove }) => (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key} rules={[{ required: true }, { min: 5 }]}>
                 <Input />
               </Field>
@@ -415,7 +415,7 @@ describe('Form.List', () => {
         ),
         {
           initialValues: { list: ['', '', ''] },
-        },
+        }
       );
 
       expect(container.querySelectorAll('input')).toHaveLength(3);
@@ -443,7 +443,7 @@ describe('Form.List', () => {
       const [container] = generateForm(
         (fields, { add }) => (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key} rules={[{ required: true }, { min: 5 }]}>
                 <Input />
               </Field>
@@ -468,7 +468,7 @@ describe('Form.List', () => {
         ),
         {
           initialValues: { list: ['test1', 'test2', 'test3'] },
-        },
+        }
       );
 
       expect(container.querySelectorAll('input')).toHaveLength(3);
@@ -506,7 +506,7 @@ describe('Form.List', () => {
         operation = opt;
         return (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key}>
                 <Input />
               </Field>
@@ -514,7 +514,7 @@ describe('Form.List', () => {
           </div>
         );
       },
-      { preserve: false },
+      { preserve: false }
     );
 
     // Add
@@ -558,7 +558,7 @@ describe('Form.List', () => {
             message: 'Bamboo Light',
           },
         ],
-      },
+      }
     );
 
     await act(async () => {
@@ -576,7 +576,7 @@ describe('Form.List', () => {
     const [container] = generateForm(
       (fields, operation) => (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key} name={[field.name, 'first']}>
               <Input />
             </Field>
@@ -594,7 +594,7 @@ describe('Form.List', () => {
         initialValues: {
           list: [{ first: 'light' }, { first: 'bamboo' }],
         },
-      },
+      }
     );
 
     fireEvent.click(container.querySelector('button')!);
@@ -607,7 +607,7 @@ describe('Form.List', () => {
     const [container] = generateForm(
       (fields, operation) => (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <div key={field.key}>
               <Field name={[field.name, 'first']}>
                 <Input />
@@ -638,7 +638,7 @@ describe('Form.List', () => {
         initialValues: {
           list: [{ first: 'light' }],
         },
-      },
+      }
     );
     fireEvent.click(container.querySelector('.add-btn')!);
     expect(onValuesChange).toHaveBeenCalledWith(expect.anything(), {
@@ -659,7 +659,7 @@ describe('Form.List', () => {
           <Form.Field name={['user', 'age']}>
             <Input />
           </Form.Field>
-        </Form>,
+        </Form>
       );
 
       // Not changed
@@ -677,16 +677,16 @@ describe('Form.List', () => {
 
     it('List children change', async () => {
       const [container] = generateForm(
-        fields => (
+        (fields) => (
           <div>
-            {fields.map(field => (
+            {fields.map((field) => (
               <Field {...field} key={field.key}>
                 <Input />
               </Field>
             ))}
           </div>
         ),
-        { initialValues: { list: ['light', 'bamboo'] } },
+        { initialValues: { list: ['light', 'bamboo'] } }
       );
 
       // Not changed yet
@@ -705,7 +705,7 @@ describe('Form.List', () => {
     it('List self change', () => {
       const [container] = generateForm((fields, opt) => (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input />
             </Field>
@@ -735,9 +735,9 @@ describe('Form.List', () => {
 
   it('initialValue', () => {
     generateForm(
-      fields => (
+      (fields) => (
         <div>
-          {fields.map(field => (
+          {fields.map((field) => (
             <Field {...field} key={field.key}>
               <Input />
             </Field>
@@ -745,7 +745,7 @@ describe('Form.List', () => {
         </div>
       ),
       null,
-      { initialValue: ['light', 'bamboo'] },
+      { initialValue: ['light', 'bamboo'] }
     );
 
     expect(form.current?.getFieldsValue()).toEqual({
@@ -771,9 +771,9 @@ describe('Form.List', () => {
     };
 
     const [container] = generateForm(
-      fields => (
+      (fields) => (
         <div>
-          {fields.map(field => {
+          {fields.map((field) => {
             return <Hooker field={field} key={field.key} />;
           })}
         </div>
@@ -782,7 +782,7 @@ describe('Form.List', () => {
         initialValues: {
           list: [{ user: 'bamboo' }],
         },
-      },
+      }
     );
 
     expect(container.querySelector('.internal-key')!.textContent).toEqual('0');
@@ -807,7 +807,7 @@ describe('Form.List', () => {
     const { container } = render(
       <Form>
         <Form.List name="parent">{() => <InnerForm />}</Form.List>
-      </Form>,
+      </Form>
     );
 
     await changeValue(getInput(container, 0), 'little');
@@ -827,8 +827,8 @@ describe('Form.List', () => {
             <Input />
           </Field>
           <Form.List name="list">
-            {fields =>
-              fields.map(field => (
+            {(fields) =>
+              fields.map((field) => (
                 <Field key={field.key} name={[field.name, 'bamboo']}>
                   <Input />
                 </Field>
@@ -836,7 +836,7 @@ describe('Form.List', () => {
             }
           </Form.List>
         </Form>
-      </div>,
+      </div>
     );
 
     // Strict only return field not list
@@ -863,20 +863,18 @@ describe('Form.List', () => {
         <Form.List name="list">
           {(fields, { add }) => (
             <>
-              {
-                fields.map((field) => {
-                  return (
-                    <React.Fragment key={field.key}>
-                      <Form.Field name={[field.name, 'field1']}>
-                        <input placeholder="field1" />
-                      </Form.Field>
-                      <Form.Field name={[field.name, 'field2']}>
-                        <input placeholder="field2" />
-                      </Form.Field>
-                    </React.Fragment>
-                  );
-                })
-              }
+              {fields.map((field) => {
+                return (
+                  <React.Fragment key={field.key}>
+                    <Form.Field name={[field.name, 'field1']}>
+                      <input placeholder="field1" />
+                    </Form.Field>
+                    <Form.Field name={[field.name, 'field2']}>
+                      <input placeholder="field2" />
+                    </Form.Field>
+                  </React.Fragment>
+                );
+              })}
               <button onClick={() => add()}>add</button>
             </>
           )}

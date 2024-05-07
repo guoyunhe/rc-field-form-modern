@@ -1,8 +1,9 @@
-import toChildrenArray from 'rc-util/lib/Children/toArray';
-import isEqual from 'rc-util/lib/isEqual';
-import warning from 'rc-util/lib/warning';
+import toChildrenArray from 'rc-util-modern/dist/Children/toArray';
+import isEqual from 'rc-util-modern/dist/isEqual';
+import warning from 'rc-util-modern/dist/warning';
 import * as React from 'react';
 import FieldContext, { HOOK_MARK } from './FieldContext';
+import ListContext from './ListContext';
 import type {
   EventArgs,
   FieldEntity,
@@ -19,7 +20,6 @@ import type {
   Store,
   StoreValue,
 } from './interface';
-import ListContext from './ListContext';
 import { toArray } from './utils/typeUtil';
 import { validateRules } from './utils/validateUtil';
 import {
@@ -41,7 +41,7 @@ function requireUpdate(
   next: StoreValue,
   prevValue: StoreValue,
   nextValue: StoreValue,
-  info: NotifyInfo,
+  info: NotifyInfo
 ): boolean {
   if (typeof shouldUpdate === 'function') {
     return shouldUpdate(prev, next, 'source' in info ? { source: info.source } : {});
@@ -123,7 +123,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
   private cancelRegisterFunc: (
     isListField?: boolean,
     preserve?: boolean,
-    namePath?: InternalNamePath,
+    namePath?: InternalNamePath
   ) => void | null = null;
 
   private mounted = false;
@@ -351,7 +351,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
         // No need for `namePathMath` check and `shouldUpdate` check, since `valueUpdate` will be
         // emitted earlier and they will work there
         // If set it may cause unnecessary twice rerendering
-        if (dependencyList.some(dependency => containsNamePath(info.relatedFields, dependency))) {
+        if (dependencyList.some((dependency) => containsNamePath(info.relatedFields, dependency))) {
           this.reRender();
           return;
         }
@@ -404,7 +404,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
       let filteredRules = this.getRules();
       if (triggerName) {
         filteredRules = filteredRules
-          .filter(rule => rule)
+          .filter((rule) => rule)
           .filter((rule: RuleObject) => {
             const { validateTrigger } = rule;
             if (!validateTrigger) {
@@ -417,7 +417,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
 
       // Wait for debounce. Skip if no `triggerName` since its from `validateFields / submit`
       if (validateDebounce && triggerName) {
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           setTimeout(resolve, validateDebounce);
         });
 
@@ -433,11 +433,11 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
         filteredRules,
         options,
         validateFirst,
-        messageVariables,
+        messageVariables
       );
 
       promise
-        .catch(e => e)
+        .catch((e) => e)
         .then((ruleErrors: RuleError[] = EMPTY_ERRORS) => {
           if (this.validatePromise === rootPromise) {
             this.validatePromise = null;
@@ -531,7 +531,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
   public getOnlyChild = (
     children:
       | React.ReactNode
-      | ((control: ChildProps, meta: Meta, context: FormInstance) => React.ReactNode),
+      | ((control: ChildProps, meta: Meta, context: FormInstance) => React.ReactNode)
   ): { child: React.ReactNode | null; isFunction: boolean } => {
     // Support render props
     if (typeof children === 'function') {
@@ -587,10 +587,10 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
 
     // warning when prop value is function
     if (process.env.NODE_ENV !== 'production' && valueProps) {
-      Object.keys(valueProps).forEach(key => {
+      Object.keys(valueProps).forEach((key) => {
         warning(
           typeof valueProps[key] !== 'function',
-          `It's not recommended to generate dynamic function prop by \`getValueProps\`. Please pass it to child component directly (prop: ${key})`,
+          `It's not recommended to generate dynamic function prop by \`getValueProps\`. Please pass it to child component directly (prop: ${key})`
         );
       });
     }
@@ -671,7 +671,7 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
     } else if (React.isValidElement(child)) {
       returnChildNode = React.cloneElement(
         child as React.ReactElement,
-        this.getControlled((child as React.ReactElement).props),
+        this.getControlled((child as React.ReactElement).props)
       );
     } else {
       warning(!child, '`children` of Field is not validate ReactElement.');

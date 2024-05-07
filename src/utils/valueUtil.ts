@@ -1,6 +1,6 @@
-import getValue from 'rc-util/lib/utils/get';
-import setValue from 'rc-util/lib/utils/set';
-import type { InternalNamePath, NamePath, Store, EventArgs } from '../interface';
+import getValue from 'rc-util-modern/dist/utils/get';
+import setValue from 'rc-util-modern/dist/utils/set';
+import type { EventArgs, InternalNamePath, NamePath, Store } from '../interface';
 import { toArray } from './typeUtil';
 
 export { getValue, setValue };
@@ -18,7 +18,7 @@ export function getNamePath(path: NamePath | null): InternalNamePath {
 
 export function cloneByNamePathList(store: Store, namePathList: InternalNamePath[]): Store {
   let newStore = {};
-  namePathList.forEach(namePath => {
+  namePathList.forEach((namePath) => {
     const value = getValue(store, namePath);
     newStore = setValue(newStore, namePath, value);
   });
@@ -35,9 +35,9 @@ export function cloneByNamePathList(store: Store, namePathList: InternalNamePath
 export function containsNamePath(
   namePathList: InternalNamePath[],
   namePath: InternalNamePath,
-  partialMatch = false,
+  partialMatch = false
 ) {
-  return namePathList && namePathList.some(path => matchNamePath(namePath, path, partialMatch));
+  return namePathList && namePathList.some((path) => matchNamePath(namePath, path, partialMatch));
 }
 
 /**
@@ -49,7 +49,7 @@ export function containsNamePath(
 export function matchNamePath(
   namePath: InternalNamePath,
   subNamePath: InternalNamePath | null,
-  partialMatch = false,
+  partialMatch = false
 ) {
   if (!namePath || !subNamePath) {
     return false;
@@ -81,7 +81,7 @@ export function isSimilar(source: SimilarObject, target: SimilarObject) {
   const targetKeys = Object.keys(target);
   const keys = new Set([...sourceKeys, ...targetKeys]);
 
-  return [...keys].every(key => {
+  return [...keys].every((key) => {
     const sourceValue = source[key];
     const targetValue = target[key];
 

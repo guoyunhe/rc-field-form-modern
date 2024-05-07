@@ -1,15 +1,15 @@
-import RawAsyncValidator from '@rc-component/async-validator';
+import RawAsyncValidator from 'rc-async-validator-modern';
+import { merge } from 'rc-util-modern/dist/utils/set';
+import warning from 'rc-util-modern/dist/warning';
 import * as React from 'react';
-import warning from 'rc-util/lib/warning';
 import type {
   InternalNamePath,
   InternalValidateOptions,
+  RuleError,
   RuleObject,
   StoreValue,
-  RuleError,
 } from '../interface';
 import { defaultValidateMessages } from './messages';
-import { merge } from 'rc-util/lib/utils/set';
 
 // Remove incorrect original ts define
 const AsyncValidator: any = RawAsyncValidator;
@@ -32,7 +32,7 @@ async function validateRule(
   value: StoreValue,
   rule: RuleObject,
   options: InternalValidateOptions,
-  messageVariables?: Record<string, string>,
+  messageVariables?: Record<string, string>
 ): Promise<string[]> {
   const cloneRule = { ...rule };
 
@@ -90,8 +90,8 @@ async function validateRule(
   if (!result.length && subRuleField) {
     const subResults: string[][] = await Promise.all(
       (value as StoreValue[]).map((subValue: StoreValue, i: number) =>
-        validateRule(`${name}.${i}`, subValue, subRuleField, options, messageVariables),
-      ),
+        validateRule(`${name}.${i}`, subValue, subRuleField, options, messageVariables)
+      )
     );
 
     return subResults.reduce((prev, errors) => [...prev, ...errors], []);
@@ -105,7 +105,7 @@ async function validateRule(
     ...messageVariables,
   };
 
-  const fillVariableResult = result.map(error => {
+  const fillVariableResult = result.map((error) => {
     if (typeof error === 'string') {
       return replaceMessage(error, kv);
     }
@@ -125,7 +125,7 @@ export function validateRules(
   rules: RuleObject[],
   options: InternalValidateOptions,
   validateFirst: boolean | 'parallel',
-  messageVariables?: Record<string, string>,
+  messageVariables?: Record<string, string>
 ) {
   const name = namePath.join('.');
 
@@ -143,7 +143,7 @@ export function validateRules(
         cloneRule.validator = (
           rule: RuleObject,
           val: StoreValue,
-          callback: (error?: string) => void,
+          callback: (error?: string) => void
         ) => {
           let hasPromise = false;
 
@@ -153,7 +153,7 @@ export function validateRules(
             Promise.resolve().then(() => {
               warning(
                 !hasPromise,
-                'Your validator function has already return a promise. `callback` will be ignored.',
+                'Your validator function has already return a promise. `callback` will be ignored.'
               );
 
               if (!hasPromise) {
@@ -178,7 +178,7 @@ export function validateRules(
               .then(() => {
                 callback();
               })
-              .catch(err => {
+              .catch((err) => {
                 callback(err || ' ');
               });
           }
@@ -221,8 +221,11 @@ export function validateRules(
     });
   } else {
     // >>>>> Validate by parallel
-    const rulePromises: Promise<RuleError>[] = filledRules.map(rule =>
-      validateRule(name, value, rule, options, messageVariables).then(errors => ({ errors, rule })),
+    const rulePromises: Promise<RuleError>[] = filledRules.map((rule) =>
+      validateRule(name, value, rule, options, messageVariables).then((errors) => ({
+        errors,
+        rule,
+      }))
     );
 
     summaryPromise = (
@@ -234,7 +237,7 @@ export function validateRules(
   }
 
   // Internal catch error to avoid console error log.
-  summaryPromise.catch(e => e);
+  summaryPromise.catch((e) => e);
 
   return summaryPromise;
 }
@@ -245,16 +248,16 @@ async function finishOnAllFailed(rulePromises: Promise<RuleError>[]): Promise<Ru
       const errors: RuleError[] = [].concat(...errorsList);
 
       return errors;
-    },
+    }
   );
 }
 
 async function finishOnFirstFailed(rulePromises: Promise<RuleError>[]): Promise<RuleError[]> {
   let count = 0;
 
-  return new Promise(resolve => {
-    rulePromises.forEach(promise => {
-      promise.then(ruleError => {
+  return new Promise((resolve) => {
+    rulePromises.forEach((promise) => {
+      promise.then((ruleError) => {
         if (ruleError.errors.length) {
           resolve([ruleError]);
         }

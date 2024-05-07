@@ -1,4 +1,4 @@
-import warning from 'rc-util/lib/warning';
+import warning from 'rc-util-modern/dist/warning';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import FieldContext, { HOOK_MARK } from './FieldContext';
 import type {
@@ -31,7 +31,7 @@ const useWatchWarning =
 
         warning(
           nameStrRef.current === fullyStr,
-          '`useWatch` is not support dynamic `namePath`. Please provide static instead.',
+          '`useWatch` is not support dynamic `namePath`. Please provide static instead.'
         );
       }
     : () => {};
@@ -41,61 +41,61 @@ function useWatch<
   TForm extends FormInstance,
   TDependencies2 extends keyof GetGeneric<TForm>[TDependencies1],
   TDependencies3 extends keyof GetGeneric<TForm>[TDependencies1][TDependencies2],
-  TDependencies4 extends keyof GetGeneric<TForm>[TDependencies1][TDependencies2][TDependencies3],
+  TDependencies4 extends keyof GetGeneric<TForm>[TDependencies1][TDependencies2][TDependencies3]
 >(
   dependencies: [TDependencies1, TDependencies2, TDependencies3, TDependencies4],
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): GetGeneric<TForm>[TDependencies1][TDependencies2][TDependencies3][TDependencies4];
 
 function useWatch<
   TDependencies1 extends keyof GetGeneric<TForm>,
   TForm extends FormInstance,
   TDependencies2 extends keyof GetGeneric<TForm>[TDependencies1],
-  TDependencies3 extends keyof GetGeneric<TForm>[TDependencies1][TDependencies2],
+  TDependencies3 extends keyof GetGeneric<TForm>[TDependencies1][TDependencies2]
 >(
   dependencies: [TDependencies1, TDependencies2, TDependencies3],
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): GetGeneric<TForm>[TDependencies1][TDependencies2][TDependencies3];
 
 function useWatch<
   TDependencies1 extends keyof GetGeneric<TForm>,
   TForm extends FormInstance,
-  TDependencies2 extends keyof GetGeneric<TForm>[TDependencies1],
+  TDependencies2 extends keyof GetGeneric<TForm>[TDependencies1]
 >(
   dependencies: [TDependencies1, TDependencies2],
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): GetGeneric<TForm>[TDependencies1][TDependencies2];
 
 function useWatch<TDependencies extends keyof GetGeneric<TForm>, TForm extends FormInstance>(
   dependencies: TDependencies | [TDependencies],
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): GetGeneric<TForm>[TDependencies];
 
 function useWatch<TForm extends FormInstance>(
   dependencies: [],
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): GetGeneric<TForm>;
 
 // ------- selector type -------
 function useWatch<TForm extends FormInstance, TSelected = unknown>(
   selector: (values: GetGeneric<TForm>) => TSelected,
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): TSelected;
 
 function useWatch<ValueType = Store, TSelected = unknown>(
   selector: (values: ValueType) => TSelected,
-  form?: FormInstance | WatchOptions<FormInstance>,
+  form?: FormInstance | WatchOptions<FormInstance>
 ): TSelected;
 // ------- selector type end -------
 
 function useWatch<TForm extends FormInstance>(
   dependencies: NamePath,
-  form?: TForm | WatchOptions<TForm>,
+  form?: TForm | WatchOptions<TForm>
 ): any;
 
 function useWatch<ValueType = Store>(
   dependencies: NamePath,
-  form?: FormInstance | WatchOptions<FormInstance>,
+  form?: FormInstance | WatchOptions<FormInstance>
 ): ValueType;
 
 function useWatch(
@@ -119,7 +119,7 @@ function useWatch(
   if (process.env.NODE_ENV !== 'production') {
     warning(
       args.length === 2 ? (form ? isValidForm : true) : isValidForm,
-      'useWatch requires a form instance since it can not auto detect from context.',
+      'useWatch requires a form instance since it can not auto detect from context.'
     );
   }
 
@@ -171,7 +171,7 @@ function useWatch(
 
     // We do not need re-register since namePath content is the same
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isValidForm],
+    [isValidForm]
   );
 
   return value;

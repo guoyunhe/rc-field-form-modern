@@ -1,84 +1,91 @@
 {
-  "name": "rc-field-form",
+  "name": "rc-field-form-modern",
   "version": "2.0.0",
-  "description": "React Form Component",
-  "typings": "es/index.d.ts",
-  "engines": {
-    "node": ">=8.x"
-  },
+  "description": "React Form Component (for Chrome 86+)",
   "keywords": [
     "react",
     "react-component",
     "react-form",
     "form"
   ],
-  "homepage": "https://github.com/react-component/field-form",
-  "author": "smith3816@gmail.com",
+  "homepage": "https://github.com/guoyunhe/rc-field-form-modern",
+  "bugs": {
+    "url": "https://github.com/guoyunhe/rc-field-form-modern/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-component/field-form.git"
+    "url": "https://github.com/guoyunhe/rc-field-form-modern.git"
   },
-  "bugs": {
-    "url": "https://github.com/react-component/field-form/issues"
-  },
-  "files": [
-    "lib",
-    "es",
-    "dist",
-    "assets/*.css"
-  ],
+  "funding": "https://github.com/sponsors/guoyunhe",
   "license": "MIT",
-  "main": "./lib/index",
-  "module": "./es/index",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
-    "start": "dumi dev",
-    "docs:build": "dumi build",
-    "docs:deploy": "gh-pages -d docs-dist",
-    "compile": "father build",
-    "deploy": "npm run docs:build && npm run docs:deploy",
-    "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
-    "test": "rc-test",
-    "test:coverage": "umi-test --coverage",
-    "prepublishOnly": "npm run compile && np --no-cleanup --yolo --no-publish",
-    "lint": "eslint src/ --ext .tsx,.ts",
-    "lint:tsc": "tsc -p tsconfig.json --noEmit",
-    "now-build": "npm run docs:build"
+    "build": "rive build",
+    "build:watch": "rive build --watch",
+    "lint": "rive lint",
+    "lint:fix": "rive lint --fix",
+    "start": "rive start",
+    "test": "rive test",
+    "test:ui": "rive test --ui",
+    "test:watch": "rive test --watch"
   },
-  "peerDependencies": {
-    "react": ">=16.9.0",
-    "react-dom": ">=16.9.0"
+  "prettier": "prettier-config-rive",
+  "eslintConfig": {
+    "extends": "eslint-config-rive/react"
+  },
+  "stylelint": {
+    "extends": "stylelint-config-rive"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.0",
-    "@rc-component/async-validator": "^5.0.1",
-    "rc-util": "^5.32.2"
+    "classnames": "^2.0.0",
+    "rc-async-validator-modern": "^5.0.1",
+    "rc-util-modern": "^5.32.2"
   },
   "devDependencies": {
+    "@mdx-js/react": "^3.0.1",
     "@rc-component/father-plugin": "^1.0.0",
     "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^15.0.2",
-    "@types/jest": "^29.2.5",
+    "@testing-library/react": "^15.0.0",
+    "@testing-library/user-event": "^14.0.0",
     "@types/lodash": "^4.14.135",
-    "@types/node": "^20.11.30",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
     "@umijs/fabric": "^4.0.1",
-    "dumi": "^2.0.0",
-    "eslint": "^8.54.0",
-    "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-unicorn": "^52.0.0",
     "father": "^4.0.0",
     "gh-pages": "^6.1.0",
-    "jest": "^29.0.0",
-    "np": "^10.0.2",
-    "prettier": "^3.1.0",
     "rc-test": "^7.0.15",
-    "react": "^18.0.0",
+    "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^8.0.3",
-    "react-dom": "^18.0.0",
+    "react-doc-ui": "^2.2.6",
+    "react-dom": "^18.3.1",
     "react-redux": "^9.0.4",
     "redux": "^5.0.0",
-    "typescript": "^5.1.6"
+    "rive": "^2.0.33",
+    "typescript": "^5.4.5",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^17.0.0 || ^16.8.0",
+    "react-dom": ">=16.9.0"
+  },
+  "engines": {
+    "node": ">=8.x"
+  },
+  "rive": {
+    "template": "react",
+    "doc": {
+      "disabled": true
+    }
   }
 }

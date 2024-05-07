@@ -1,11 +1,11 @@
+import warning from 'rc-util-modern/dist/warning';
 import * as React from 'react';
-import warning from 'rc-util/lib/warning';
-import type { InternalNamePath, NamePath, StoreValue, ValidatorRule, Meta } from './interface';
-import FieldContext from './FieldContext';
 import Field from './Field';
-import { move, getNamePath } from './utils/valueUtil';
+import FieldContext from './FieldContext';
 import type { ListContextProps } from './ListContext';
 import ListContext from './ListContext';
+import type { InternalNamePath, Meta, NamePath, StoreValue, ValidatorRule } from './interface';
+import { getNamePath, move } from './utils/valueUtil';
 
 export interface ListField {
   name: number;
@@ -27,7 +27,7 @@ export interface ListProps<Values = any> {
   children?: (
     fields: ListField[],
     operations: ListOperations,
-    meta: Meta,
+    meta: Meta
   ) => JSX.Element | React.ReactNode;
 
   /** @private Passed by Form.List props. Do not use since it will break by path check. */
@@ -66,7 +66,7 @@ function List<Values = any>({
         return [keyManager.keys[pathName], namePath.slice(len + 1)];
       },
     }),
-    [prefixName],
+    [prefixName]
   );
 
   // User should not pass `children` as other type.
@@ -122,7 +122,7 @@ function List<Values = any>({
                   ) {
                     warning(
                       false,
-                      'The second parameter of the add function should be a valid positive number.',
+                      'The second parameter of the add function should be a valid positive number.'
                     );
                   }
                   keyManager.keys = [...keyManager.keys, keyManager.id];
@@ -138,7 +138,7 @@ function List<Values = any>({
                   return;
                 }
                 keyManager.keys = keyManager.keys.filter(
-                  (_, keysIndex) => !indexSet.has(keysIndex),
+                  (_, keysIndex) => !indexSet.has(keysIndex)
                 );
 
                 // Trigger store change
@@ -169,7 +169,7 @@ function List<Values = any>({
               if (process.env.NODE_ENV !== 'production') {
                 warning(
                   false,
-                  `Current value of '${prefixName.join(' > ')}' is not an array type.`,
+                  `Current value of '${prefixName.join(' > ')}' is not an array type.`
                 );
               }
             }
@@ -190,7 +190,7 @@ function List<Values = any>({
                 };
               }),
               operations,
-              meta,
+              meta
             );
           }}
         </Field>

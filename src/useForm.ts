@@ -1,5 +1,5 @@
-import { merge } from 'rc-util/lib/utils/set';
-import warning from 'rc-util/lib/warning';
+import { merge } from 'rc-util-modern/dist/utils/set';
+import warning from 'rc-util-modern/dist/warning';
 import * as React from 'react';
 import { HOOK_MARK } from './FieldContext';
 import type {
@@ -27,9 +27,9 @@ import type {
   ValuedNotifyInfo,
   WatchCallBack,
 } from './interface';
+import NameMap from './utils/NameMap';
 import { allPromiseFinish } from './utils/asyncUtil';
 import { defaultValidateMessages } from './utils/messages';
-import NameMap from './utils/NameMap';
 import {
   cloneByNamePathList,
   containsNamePath,
@@ -158,7 +158,7 @@ export class FormStore {
 
   private destroyForm = () => {
     const prevWithoutPreserves = new NameMap<boolean>();
-    this.getFieldEntities(true).forEach(entity => {
+    this.getFieldEntities(true).forEach((entity) => {
       if (!this.isMergedPreserve(entity.isPreserve())) {
         prevWithoutPreserves.set(entity.getNamePath(), true);
       }
@@ -189,11 +189,11 @@ export class FormStore {
   // ============================= Watch ============================
   private watchList: WatchCallBack[] = [];
 
-  private registerWatch: InternalHooks['registerWatch'] = callback => {
+  private registerWatch: InternalHooks['registerWatch'] = (callback) => {
     this.watchList.push(callback);
 
     return () => {
-      this.watchList = this.watchList.filter(fn => fn !== callback);
+      this.watchList = this.watchList.filter((fn) => fn !== callback);
     };
   };
 
@@ -203,7 +203,7 @@ export class FormStore {
       const values = this.getFieldsValue();
       const allValues = this.getFieldsValue(true);
 
-      this.watchList.forEach(callback => {
+      this.watchList.forEach((callback) => {
         callback(values, allValues, namePath);
       });
     }
@@ -220,7 +220,7 @@ export class FormStore {
         if (!this.formHooked) {
           warning(
             false,
-            'Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?',
+            'Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?'
           );
         }
       });
@@ -242,12 +242,12 @@ export class FormStore {
       return this.fieldEntities;
     }
 
-    return this.fieldEntities.filter(field => field.getNamePath().length);
+    return this.fieldEntities.filter((field) => field.getNamePath().length);
   };
 
   private getFieldsMap = (pure: boolean = false) => {
     const cache: NameMap<FieldEntity> = new NameMap();
-    this.getFieldEntities(pure).forEach(field => {
+    this.getFieldEntities(pure).forEach((field) => {
       const namePath = field.getNamePath();
       cache.set(namePath, field);
     });
@@ -255,13 +255,13 @@ export class FormStore {
   };
 
   private getFieldEntitiesForNamePathList = (
-    nameList?: NamePath[],
+    nameList?: NamePath[]
   ): (FieldEntity | InvalidateFieldEntity)[] => {
     if (!nameList) {
       return this.getFieldEntities(true);
     }
     const cache = this.getFieldsMap(true);
-    return nameList.map(name => {
+    return nameList.map((name) => {
       const namePath = getNamePath(name);
       return cache.get(namePath) || { INVALIDATE_NAME_PATH: getNamePath(name) };
     });
@@ -269,7 +269,7 @@ export class FormStore {
 
   private getFieldsValue = (
     nameList?: NamePath[] | true | GetFieldsValueConfig,
-    filterFunc?: FilterFunc,
+    filterFunc?: FilterFunc
   ) => {
     this.warningUnhooked();
 
@@ -291,7 +291,7 @@ export class FormStore {
     }
 
     const fieldEntities = this.getFieldEntitiesForNamePathList(
-      Array.isArray(mergedNameList) ? mergedNameList : null,
+      Array.isArray(mergedNameList) ? mergedNameList : null
     );
 
     const filteredNameList: NamePath[] = [];
@@ -395,23 +395,23 @@ export class FormStore {
     // ===== Will get fully compare when not config namePathList =====
     if (!namePathList) {
       return isAllFieldsTouched
-        ? fieldEntities.every(entity => isFieldTouched(entity) || entity.isList())
+        ? fieldEntities.every((entity) => isFieldTouched(entity) || entity.isList())
         : fieldEntities.some(isFieldTouched);
     }
 
     // Generate a nest tree for validate
     const map = new NameMap<FieldEntity[]>();
-    namePathList.forEach(shortNamePath => {
+    namePathList.forEach((shortNamePath) => {
       map.set(shortNamePath, []);
     });
 
-    fieldEntities.forEach(field => {
+    fieldEntities.forEach((field) => {
       const fieldNamePath = field.getNamePath();
 
       // Find matched entity and put into list
-      namePathList.forEach(shortNamePath => {
+      namePathList.forEach((shortNamePath) => {
         if (shortNamePath.every((nameUnit, i) => fieldNamePath[i] === nameUnit)) {
-          map.update(shortNamePath, list => [...list, field]);
+          map.update(shortNamePath, (list) => [...list, field]);
         }
       });
     });
@@ -436,11 +436,11 @@ export class FormStore {
 
     const fieldEntities = this.getFieldEntities();
     if (!nameList) {
-      return fieldEntities.some(testField => testField.isFieldValidating());
+      return fieldEntities.some((testField) => testField.isFieldValidating());
     }
 
     const namePathList: InternalNamePath[] = nameList.map(getNamePath);
-    return fieldEntities.some(testField => {
+    return fieldEntities.some((testField) => {
       const fieldNamePath = testField.getNamePath();
       return containsNamePath(namePathList, fieldNamePath) && testField.isFieldValidating();
     });
@@ -462,13 +462,13 @@ export class FormStore {
       namePathList?: InternalNamePath[];
       /** Skip reset if store exist value. This is only used for field register reset */
       skipExist?: boolean;
-    } = {},
+    } = {}
   ) => {
     // Create cache
     const cache: NameMap<Set<{ entity: FieldEntity; value: any }>> = new NameMap();
 
     const fieldEntities = this.getFieldEntities(true);
-    fieldEntities.forEach(field => {
+    fieldEntities.forEach((field) => {
       const { initialValue } = field.props;
       const namePath = field.getNamePath();
 
@@ -483,7 +483,7 @@ export class FormStore {
 
     // Reset
     const resetWithFields = (entities: FieldEntity[]) => {
-      entities.forEach(field => {
+      entities.forEach((field) => {
         const { initialValue } = field.props;
 
         if (initialValue !== undefined) {
@@ -495,8 +495,8 @@ export class FormStore {
             warning(
               false,
               `Form already set 'initialValues' with path '${namePath.join(
-                '.',
-              )}'. Field can not overwrite it.`,
+                '.'
+              )}'. Field can not overwrite it.`
             );
           } else {
             const records = cache.get(namePath);
@@ -505,8 +505,8 @@ export class FormStore {
               warning(
                 false,
                 `Multiple Field with path '${namePath.join(
-                  '.',
-                )}' set 'initialValue'. Can not decide which one to pick.`,
+                  '.'
+                )}' set 'initialValue'. Can not decide which one to pick.`
               );
             } else if (records) {
               const originValue = this.getFieldValue(namePath);
@@ -528,10 +528,10 @@ export class FormStore {
     } else if (info.namePathList) {
       requiredFieldEntities = [];
 
-      info.namePathList.forEach(namePath => {
+      info.namePathList.forEach((namePath) => {
         const records = cache.get(namePath);
         if (records) {
-          requiredFieldEntities.push(...[...records].map(r => r.entity));
+          requiredFieldEntities.push(...[...records].map((r) => r.entity));
         }
       });
     } else {
@@ -555,7 +555,7 @@ export class FormStore {
 
     // Reset by `nameList`
     const namePathList: InternalNamePath[] = nameList.map(getNamePath);
-    namePathList.forEach(namePath => {
+    namePathList.forEach((namePath) => {
       const initialValue = this.getInitialValue(namePath);
       this.updateStore(setValue(this.store, namePath, initialValue));
     });
@@ -651,7 +651,7 @@ export class FormStore {
 
     // un-register field callback
     return (isListField?: boolean, preserve?: boolean, subNamePath: InternalNamePath = []) => {
-      this.fieldEntities = this.fieldEntities.filter(item => item !== entity);
+      this.fieldEntities = this.fieldEntities.filter((item) => item !== entity);
 
       // Clean up store value if not preserve
       if (!this.isMergedPreserve(preserve) && (!isListField || subNamePath.length > 1)) {
@@ -661,9 +661,9 @@ export class FormStore {
           namePath.length &&
           this.getFieldValue(namePath) !== defaultValue &&
           this.fieldEntities.every(
-            field =>
+            (field) =>
               // Only reset when no namePath exist
-              !matchNamePath(field.getNamePath(), namePath),
+              !matchNamePath(field.getNamePath(), namePath)
           )
         ) {
           const prevStore = this.store;
@@ -701,7 +701,7 @@ export class FormStore {
   private notifyObservers = (
     prevStore: Store,
     namePathList: InternalNamePath[] | null,
-    info: NotifyInfo,
+    info: NotifyInfo
   ) => {
     if (this.subscribable) {
       const mergedInfo: ValuedNotifyInfo = {
@@ -796,9 +796,9 @@ export class FormStore {
      * Generate maps
      * Can use cache to save perf if user report performance issue with this
      */
-    this.getFieldEntities().forEach(field => {
+    this.getFieldEntities().forEach((field) => {
       const { dependencies } = field.props;
-      (dependencies || []).forEach(dependency => {
+      (dependencies || []).forEach((dependency) => {
         const dependencyNamePath = getNamePath(dependency);
         dependencies2fields.update(dependencyNamePath, (fields = new Set()) => {
           fields.add(field);
@@ -809,7 +809,7 @@ export class FormStore {
 
     const fillChildren = (namePath: InternalNamePath) => {
       const fields = dependencies2fields.get(namePath) || new Set();
-      fields.forEach(field => {
+      fields.forEach((field) => {
         if (!children.has(field)) {
           children.add(field);
 
@@ -829,7 +829,7 @@ export class FormStore {
 
   private triggerOnFieldsChange = (
     namePathList: InternalNamePath[],
-    filedErrors?: FieldError[],
+    filedErrors?: FieldError[]
   ) => {
     const { onFieldsChange } = this.callbacks;
 
@@ -845,14 +845,14 @@ export class FormStore {
           cache.set(name, errors);
         });
 
-        fields.forEach(field => {
+        fields.forEach((field) => {
           // eslint-disable-next-line no-param-reassign
           field.errors = cache.get(field.name) || field.errors;
         });
       }
 
       const changedFields = fields.filter(({ name: fieldName }) =>
-        containsNamePath(namePathList, fieldName as InternalNamePath),
+        containsNamePath(namePathList, fieldName as InternalNamePath)
       );
 
       if (changedFields.length) {
@@ -947,7 +947,7 @@ export class FormStore {
                 errors: mergedErrors,
                 warnings: mergedWarnings,
               };
-            }),
+            })
         );
       }
     });
@@ -957,7 +957,7 @@ export class FormStore {
 
     // Notify fields with rule that validate has finished and need update
     summaryPromise
-      .catch(results => results)
+      .catch((results) => results)
       .then((results: FieldError[]) => {
         const resultNamePathList: InternalNamePath[] = results.map(({ name }) => name);
         this.notifyObservers(this.store, resultNamePathList, {
@@ -974,7 +974,7 @@ export class FormStore {
         return Promise.reject<string[]>([]);
       })
       .catch((results: { name: InternalNamePath; errors: string[] }[]) => {
-        const errorList = results.filter(result => result && result.errors.length);
+        const errorList = results.filter((result) => result && result.errors.length);
         return Promise.reject({
           values: this.getFieldsValue(namePathList),
           errorFields: errorList,
@@ -983,11 +983,11 @@ export class FormStore {
       });
 
     // Do not throw in console
-    returnPromise.catch<ValidateErrorEntity>(e => e);
+    returnPromise.catch<ValidateErrorEntity>((e) => e);
 
     // `validating` changed. Trigger `onFieldsChange`
-    const triggerNamePathList = namePathList.filter(namePath =>
-      validateNamePathList.has(namePath.join(TMP_SPLIT)),
+    const triggerNamePathList = namePathList.filter((namePath) =>
+      validateNamePathList.has(namePath.join(TMP_SPLIT))
     );
     this.triggerOnFieldsChange(triggerNamePathList);
 
@@ -999,7 +999,7 @@ export class FormStore {
     this.warningUnhooked();
 
     this.validateFields()
-      .then(values => {
+      .then((values) => {
         const { onFinish } = this.callbacks;
         if (onFinish) {
           try {
@@ -1010,7 +1010,7 @@ export class FormStore {
           }
         }
       })
-      .catch(e => {
+      .catch((e) => {
         const { onFinishFailed } = this.callbacks;
         if (onFinishFailed) {
           onFinishFailed(e);

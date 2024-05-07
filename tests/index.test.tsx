@@ -1,12 +1,12 @@
+import type { Meta } from '@/interface';
 import { act, fireEvent, render } from '@testing-library/react';
-import { resetWarned } from 'rc-util/lib/warning';
+import { resetWarned } from 'rc-util-modern/dist/warning';
 import React from 'react';
 import type { FormInstance } from '../src';
 import Form, { Field, useForm } from '../src';
 import { changeValue, getInput, matchError } from './common';
 import InfoField, { Input } from './common/InfoField';
 import timeout from './common/timeout';
-import type { Meta } from '@/interface';
 
 describe('Form.Basic', () => {
   describe('create form', () => {
@@ -24,7 +24,7 @@ describe('Form.Basic', () => {
       const { container } = render(
         <Form>
           <Content />
-        </Form>,
+        </Form>
       );
       expect(container.querySelector<HTMLFormElement>('form')).toBeTruthy();
       expect(container.querySelectorAll<HTMLInputElement>('input').length).toBe(2);
@@ -35,7 +35,7 @@ describe('Form.Basic', () => {
         const { container } = render(
           <Form component={false}>
             <Content />
-          </Form>,
+          </Form>
         );
         expect(container.querySelectorAll<HTMLFormElement>('form').length).toBe(0);
         expect(container.querySelectorAll<HTMLInputElement>('input').length).toBe(2);
@@ -45,7 +45,7 @@ describe('Form.Basic', () => {
         const { container } = render(
           <Form component="pre">
             <Content />
-          </Form>,
+          </Form>
         );
         expect(container.querySelectorAll<HTMLFormElement>('form').length).toBe(0);
         expect(container.querySelectorAll<HTMLPreElement>('pre').length).toBe(1);
@@ -59,7 +59,7 @@ describe('Form.Basic', () => {
         const { container } = render(
           <Form component={Component}>
             <Content />
-          </Form>,
+          </Form>
         );
         expect(container.querySelectorAll<HTMLFormElement>('form').length).toBe(0);
         expect(container.querySelectorAll<HTMLDivElement>('.customize').length).toBe(1);
@@ -72,7 +72,7 @@ describe('Form.Basic', () => {
         const { container } = render(
           <Form>
             <Content />
-          </Form>,
+          </Form>
         );
         expect(container.querySelector<HTMLFormElement>('form')).toBeTruthy();
         expect(container.querySelectorAll<HTMLInputElement>('input').length).toBe(2);
@@ -94,7 +94,7 @@ describe('Form.Basic', () => {
           <InfoField name="password" />
           <Field>{() => null}</Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(form.current?.isFieldsTouched()).toBeFalsy();
@@ -132,7 +132,7 @@ describe('Form.Basic', () => {
                 <Input data-name="username" />
               </Field>
             </Form>
-          </div>,
+          </div>
         );
 
         await changeValue(getInput(container, 'username'), 'Bamboo');
@@ -140,7 +140,7 @@ describe('Form.Basic', () => {
         expect(form.current?.getFieldError('username')).toEqual([]);
         expect(form.current?.isFieldTouched('username')).toBeTruthy();
         expect(onMeta).toHaveBeenCalledWith(
-          expect.objectContaining({ touched: true, errors: [], warnings: [] }),
+          expect.objectContaining({ touched: true, errors: [], warnings: [] })
         );
         expect(onReset).not.toHaveBeenCalled();
         onMeta.mockRestore();
@@ -151,7 +151,7 @@ describe('Form.Basic', () => {
         expect(form.current?.getFieldError('username')).toEqual([]);
         expect(form.current?.isFieldTouched('username')).toBeFalsy();
         expect(onMeta).toHaveBeenCalledWith(
-          expect.objectContaining({ touched: false, errors: [], warnings: [] }),
+          expect.objectContaining({ touched: false, errors: [], warnings: [] })
         );
         expect(onReset).toHaveBeenCalled();
         onMeta.mockRestore();
@@ -166,7 +166,7 @@ describe('Form.Basic', () => {
             touched: true,
             errors: ["'username' is required"],
             warnings: [],
-          }),
+          })
         );
         expect(onReset).not.toHaveBeenCalled();
         onMeta.mockRestore();
@@ -177,7 +177,7 @@ describe('Form.Basic', () => {
         expect(form.current?.getFieldError('username')).toEqual([]);
         expect(form.current?.isFieldTouched('username')).toBeFalsy();
         expect(onMeta).toHaveBeenCalledWith(
-          expect.objectContaining({ touched: false, errors: [], warnings: [] }),
+          expect.objectContaining({ touched: false, errors: [], warnings: [] })
         );
         expect(onReset).toHaveBeenCalled();
       });
@@ -200,7 +200,7 @@ describe('Form.Basic', () => {
               <Input data-name="password" />
             </Field>
           </Form>
-        </div>,
+        </div>
       );
 
       await changeValue(getInput(container, 'username'), 'Bamboo');
@@ -223,7 +223,7 @@ describe('Form.Basic', () => {
           <Field name="username" onMetaChange={onMetaChange}>
             <Input />
           </Field>
-        </Form>,
+        </Form>
       );
       unmount();
       expect(onMetaChange).toHaveBeenCalledWith(expect.objectContaining({ destroy: true }));
@@ -236,11 +236,11 @@ describe('Form.Basic', () => {
     render(
       <Field>
         <Input />
-      </Field>,
+      </Field>
     );
 
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: Can not find FormContext. Please make sure you wrap Field under Form.',
+      'Warning: Can not find FormContext. Please make sure you wrap Field under Form.'
     );
 
     errorSpy.mockRestore();
@@ -254,7 +254,7 @@ describe('Form.Basic', () => {
         <Field name="username">
           <Input onChange={onChange} />
         </Field>
-      </Form>,
+      </Form>
     );
 
     await changeValue(getInput(container), 'Bamboo');
@@ -299,7 +299,7 @@ describe('Form.Basic', () => {
           <Input />
         </InfoField>
         <button type="reset">reset</button>
-      </Form>,
+      </Form>
     );
     await changeValue(getInput(container), 'Bamboo');
     fireEvent.reset(container.querySelector('form'));
@@ -316,7 +316,7 @@ describe('Form.Basic', () => {
         <InfoField name="user" rules={[{ required: true }]}>
           <Input />
         </InfoField>
-      </Form>,
+      </Form>
     );
 
     // Not trigger
@@ -349,13 +349,13 @@ describe('Form.Basic', () => {
     render(
       <div>
         <Form ref={form} />
-      </div>,
+      </div>
     );
 
     expect((form.current as any)?.getInternalHooks()).toEqual(null);
 
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: `getInternalHooks` is internal usage. Should not call directly.',
+      'Warning: `getInternalHooks` is internal usage. Should not call directly.'
     );
 
     errorSpy.mockRestore();
@@ -370,7 +370,7 @@ describe('Form.Basic', () => {
             <Input type="checkbox" />
           </Field>
         </Form>
-      </div>,
+      </div>
     );
 
     // wrapper.find('input[type="checkbox"]').simulate('change', { target: { checked: true } });
@@ -388,11 +388,11 @@ describe('Form.Basic', () => {
     const { container } = render(
       <div>
         <Form initialValues={{ test: 'bamboo' }}>
-          <Field name="test" getValueProps={val => ({ 'data-light': val })}>
+          <Field name="test" getValueProps={(val) => ({ 'data-light': val })}>
             <span className="anything" />
           </Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(container.querySelector('.anything')).toHaveAttribute('data-light', 'bamboo');
@@ -406,7 +406,7 @@ describe('Form.Basic', () => {
             <span className="anything" />
           </Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(container.querySelector('.anything')).toBeTruthy();
@@ -422,11 +422,9 @@ describe('Form.Basic', () => {
           <Field getValueProps={getValueProps1}>
             <span className="anything" />
           </Field>
-          <Field getValueProps={getValueProps2}>
-            {() => <span className="anything" />}
-          </Field>
+          <Field getValueProps={getValueProps2}>{() => <span className="anything" />}</Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(getValueProps1).not.toHaveBeenCalled();
@@ -454,7 +452,7 @@ describe('Form.Basic', () => {
               return null;
             }}
           </Field>
-        </Form>,
+        </Form>
       );
 
       await changeValue(getInput(container, 'username'), ['bamboo', '']);
@@ -494,7 +492,7 @@ describe('Form.Basic', () => {
               );
             }}
           </Field>
-        </Form>,
+        </Form>
       );
 
       // const props = wrapper.find('#holder').props();
@@ -504,7 +502,7 @@ describe('Form.Basic', () => {
       expect(container.querySelector('#holder')).toHaveAttribute('data-touched', 'false');
       expect(container.querySelector('#holder')).toHaveAttribute(
         'data-value',
-        '{"username":"light"}',
+        '{"username":"light"}'
       );
     });
   });
@@ -519,7 +517,7 @@ describe('Form.Basic', () => {
               <Input />
             </InfoField>
           </Form>
-        </div>,
+        </div>
       );
 
       act(() => {
@@ -547,7 +545,7 @@ describe('Form.Basic', () => {
               }}
             </Field>
           </Form>
-        </div>,
+        </div>
       );
 
       triggerUpdate.mockReset();
@@ -588,7 +586,7 @@ describe('Form.Basic', () => {
             return null;
           }}
         </Field>
-      </Form>,
+      </Form>
     );
 
     expect(called1).toBeTruthy();
@@ -609,7 +607,7 @@ describe('Form.Basic', () => {
             }}
           </Field>
         </Form>
-      </div>,
+      </div>
     );
 
     // Init
@@ -659,10 +657,10 @@ describe('Form.Basic', () => {
             <h2 key="2">Bamboo</h2>
           </Field>
         </Form>
-      </div>,
+      </div>
     );
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: `children` of Field is not validate ReactElement.',
+      'Warning: `children` of Field is not validate ReactElement.'
     );
     errorSpy.mockRestore();
   });
@@ -683,7 +681,7 @@ describe('Form.Basic', () => {
 
     jest.runAllTimers();
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?',
+      'Warning: Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?'
     );
     errorSpy.mockRestore();
     jest.useRealTimers();
@@ -699,11 +697,11 @@ describe('Form.Basic', () => {
           <InfoField name="password" />
           <Field>{() => null}</Field>
         </Form>
-      </div>,
+      </div>
     );
 
     expect(
-      form.current?.getFieldsValue(null, meta => {
+      form.current?.getFieldsValue(null, (meta) => {
         expect(Object.keys(meta)).toEqual([
           'touched',
           'validating',
@@ -713,21 +711,21 @@ describe('Form.Basic', () => {
           'validated',
         ]);
         return false;
-      }),
+      })
     ).toEqual({});
 
     expect(form.current?.getFieldsValue(null, () => true)).toEqual(form.current?.getFieldsValue());
-    expect(form.current?.getFieldsValue(null, meta => meta.touched)).toEqual({});
+    expect(form.current?.getFieldsValue(null, (meta) => meta.touched)).toEqual({});
 
     await changeValue(getInput(container, 0), 'Bamboo');
     expect(form.current?.getFieldsValue(null, () => true)).toEqual(form.current?.getFieldsValue());
-    expect(form.current?.getFieldsValue(null, meta => meta.touched)).toEqual({
+    expect(form.current?.getFieldsValue(null, (meta) => meta.touched)).toEqual({
       username: 'Bamboo',
     });
-    expect(form.current?.getFieldsValue(['username'], meta => meta.touched)).toEqual({
+    expect(form.current?.getFieldsValue(['username'], (meta) => meta.touched)).toEqual({
       username: 'Bamboo',
     });
-    expect(form.current?.getFieldsValue(['password'], meta => meta.touched)).toEqual({});
+    expect(form.current?.getFieldsValue(['password'], (meta) => meta.touched)).toEqual({});
   });
 
   it('should not crash when return value contains target field', async () => {
@@ -742,7 +740,7 @@ describe('Form.Basic', () => {
         <Field name="user">
           <CustomInput />
         </Field>
-      </Form>,
+      </Form>
     );
     expect(() => {
       fireEvent.change(container.querySelector('input'), { target: { value: 'Light' } });
@@ -771,7 +769,7 @@ describe('Form.Basic', () => {
           autoComplete="off"
         >
           <Form.List name="users">
-            {fields => (
+            {(fields) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
                   <Field
@@ -862,8 +860,8 @@ describe('Form.Basic', () => {
     const Demo: React.FC = () => (
       <Form ref={formRef} initialValues={{ list: ['bamboo', 'little', 'light'] }}>
         <Form.List name="list">
-          {fields =>
-            fields.map(field => (
+          {(fields) =>
+            fields.map((field) => (
               <Field {...field} key={field.key}>
                 <Input />
               </Field>
@@ -878,7 +876,7 @@ describe('Form.Basic', () => {
 
     const { container } = render(<Demo />);
     expect(
-      Array.from(container.querySelectorAll<HTMLInputElement>('input')).map(input => input?.value),
+      Array.from(container.querySelectorAll<HTMLInputElement>('input')).map((input) => input?.value)
     ).toEqual(['bamboo', 'little', 'light', 'nested']);
 
     // Set
@@ -888,7 +886,7 @@ describe('Form.Basic', () => {
     });
 
     expect(
-      Array.from(container.querySelectorAll<HTMLInputElement>('input')).map(input => input?.value),
+      Array.from(container.querySelectorAll<HTMLInputElement>('input')).map((input) => input?.value)
     ).toEqual(['bamboo', 'tiny', 'light', 'match']);
   });
 
@@ -927,7 +925,7 @@ describe('Form.Basic', () => {
             <Form ref={form}>
               <InfoField name={['user', 'name']} initialValue="bamboo" />
             </Form>
-          </div>,
+          </div>
         );
 
         expect(container.querySelector('input').value).toBe('bamboo');
@@ -942,11 +940,11 @@ describe('Form.Basic', () => {
       });
     }
 
-    test('by setFieldsValue', form => {
+    test('by setFieldsValue', (form) => {
       form.setFieldsValue({ user: null });
     });
 
-    test('by setFieldValue', form => {
+    test('by setFieldValue', (form) => {
       form.setFieldValue('user', null);
     });
   });
